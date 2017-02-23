@@ -26,9 +26,24 @@ function draw() {
 }
 
 function mouseReleased() {
-    for (var i = 0; i < constructors.lenght; i++) {
+    //console.log('released ' + constructors.length);
+    for (var i = 0; i < constructors.length; i++) {
         constructors[i].release();
     }
+}
+
+function mouseMoved () {
+    //console.log('moved ' + constructors.length);
+    for (var i = 0; i < constructors.length; i++) {
+        constructors[i].drag();
+    }
+}
+
+function mouseDragged() {
+    //console.log('dragged ' + constructors.length);
+    // for (var i = 0; i < constructors.length; i++) {
+    //     constructors[i].release();
+    // }
 }
 
 var mouse = {
@@ -50,7 +65,7 @@ var dist = (function () {
     }
 })();
 
-var selectedDot = undefined;
+//var selectedDot = undefined;
 
 function Constructor(config) {
     this.x = config.x;
@@ -76,12 +91,14 @@ Constructor.prototype = {
         for (var i = 0; i < constructors.length; i++) {
             var c = constructors[i];
             if (mouse.isPressed && c.over()) {
-                selectedDot = c;
+                //selectedDot = c;
+                c.isHeld = true;
+                //console.warn('drag ' + c.id);
             }
-            c.isHeld = !true;
-        }
-        if (c.isHeld) {
-            c.move();
+            
+            if (c.isHeld) {
+                c.move();
+            }
         }
     },
     release: function () {
@@ -93,11 +110,10 @@ Constructor.prototype = {
         }
     },
     draw: function () {
-        if (selectedDot === this) {
-            this.held = true;
-        }
-        if (this.held) {
-            fill(30);
+        for (var i = 0; i < constructors.length; i++) {
+            if (constructors[i].isHeld) {
+                fill(30);
+            }
         }
         ellipse(this.x, this.y, this.radius, this.radius);
         fill(255, 0, 0);
@@ -105,6 +121,3 @@ Constructor.prototype = {
         fill(20);
     },
 };
-
-
-
