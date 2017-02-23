@@ -4,12 +4,12 @@ var constructors = [];
 var color;
 function setup() {
     createCanvas(710, 400);
-   // color = color(255, 0, 0);
+    // color = color(255, 0, 0);
     constructors = [
         //body
         new Constructor({ x: 250, y: 200, id: 4, connectors: [1, 2, 3, 5] }),
         //torso
-        new Constructor({ x: 250, y: 260, id: 5, connectors: [4, 6, 7] }),  
+        new Constructor({ x: 250, y: 260, id: 5, connectors: [4, 6, 7] }),
         //leg 
         new Constructor({ x: 300, y: 350, id: 6, connectors: [5] }),
         //leg
@@ -18,9 +18,16 @@ function setup() {
 }
 
 function draw() {
+    background(133);
     for (var i = 0; i < constructors.length; i++) {
         constructors[i].draw();
-        constructors[i].drag(); 
+        constructors[i].drag();
+    }
+}
+
+function mouseReleased() {
+    for (var i = 0; i < constructors.lenght; i++) {
+        constructors[i].release();
     }
 }
 
@@ -43,7 +50,7 @@ var dist = (function () {
     }
 })();
 
-var selectedDot = undefined;     
+var selectedDot = undefined;
 
 function Constructor(config) {
     this.x = config.x;
@@ -52,6 +59,7 @@ function Constructor(config) {
     this.held = false;
     this.id = config.id;
     this.radius = 20;
+    this.isHeld = false;
     this.contextMenu = undefined;
 
     this.over = function () {
@@ -62,21 +70,27 @@ function Constructor(config) {
 Constructor.prototype = {
     move: function () {
         this.x = mouse.x;
-        this.y += mouse.y;
-        return this;
+        this.y = mouse.y;
     },
     drag: function () {
-        if (!selectedDot) {
-            if (mouse.isPressed && this.over()) {
-                selectedDot = this;
-                if (selectedDot === this) {
-                    this.move();
-                }
+        for (var i = 0; i < constructors.length; i++) {
+            var c = constructors[i];
+            if (mouse.isPressed && c.over()) {
+                selectedDot = c;
             }
+            c.isHeld = true;
+        }
+        if (c.isHeld) {
+            c.move();
         }
     },
     release: function () {
-        selectedDot = undefined;
+        for (var i = 0; i < constructors.length; i++) {
+            var c = constructors[i];
+            if (c.isHeld) {
+                c.isHeld = false;
+            }        
+        }
     },
     draw: function () {
         if (selectedDot === this) {
