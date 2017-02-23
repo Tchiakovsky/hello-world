@@ -78,7 +78,7 @@ Constructor.prototype = {
             if (mouse.isPressed && c.over()) {
                 selectedDot = c;
             }
-            c.isHeld = true;
+            c.isHeld = !true;
         }
         if (c.isHeld) {
             c.move();
