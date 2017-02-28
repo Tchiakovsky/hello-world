@@ -5,6 +5,7 @@ var color;
 function setup() {
     createCanvas(710, 400);
     // color = color(255, 0, 0);
+    stickman = new Stickman();
     constructors = [
         //body
         new Constructor({ x: 250, y: 200, id: 4, connectors: [1, 2, 3, 5] }),
@@ -15,14 +16,15 @@ function setup() {
         //leg
         new Constructor({ x: 200, y: 350, id: 7, connectors: [5] }),
     ];
+    
 }
 
 function draw() {
     background(133);
-    for (var i = 0; i < constructors.length; i++) {
-        constructors[i].draw();
-        constructors[i].drag();
-    }
+    constructors.forEach(function (constructor) {
+        constructor.draw();
+        constructor.drag();
+    });
 }
 
 function mouseReleased() {
@@ -39,12 +41,7 @@ function mouseMoved () {
     }
 }
 
-function mouseDragged() {
-    //console.log('dragged ' + constructors.length);
-    // for (var i = 0; i < constructors.length; i++) {
-    //     constructors[i].release();
-    // }
-}
+
 
 var mouse = {
     get x() { return mouseX; },
@@ -110,10 +107,8 @@ Constructor.prototype = {
         }
     },
     draw: function () {
-        for (var i = 0; i < constructors.length; i++) {
-            if (constructors[i].isHeld) {
-                fill(30);
-            }
+        if (this.isHeld) {
+            fill(255);
         }
         ellipse(this.x, this.y, this.radius, this.radius);
         fill(255, 0, 0);
@@ -121,3 +116,11 @@ Constructor.prototype = {
         fill(20);
     },
 };
+
+var Stickman = function () {
+    this.constructors = constructors;
+
+    this.draw = function () {
+    };
+};
+
