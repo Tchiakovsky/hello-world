@@ -1,4 +1,4 @@
-//new p5();
+
 var stickman;
 var constructors = [];
 var color;
