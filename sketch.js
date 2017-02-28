@@ -121,6 +121,7 @@ var Stickman = function () {
     this.constructors = constructors;
 
     this.draw = function () {
-    };
+    
+};
 };
 
