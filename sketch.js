@@ -5,26 +5,32 @@ var color;
 function setup() {
     createCanvas(710, 400);
     // color = color(255, 0, 0);
-    stickman = new Stickman();
+    
     constructors = [
         //body
-        new Constructor({ x: 250, y: 200, id: 4, connectors: [1, 2, 3, 5] }),
+        new Constructor({ x: 250, y: 200, id: 4, connectors: [5] }),
         //torso
-        new Constructor({ x: 250, y: 260, id: 5, connectors: [4, 6, 7] }),
-        //leg 
-        new Constructor({ x: 300, y: 350, id: 6, connectors: [5] }),
-        //leg
-        new Constructor({ x: 200, y: 350, id: 7, connectors: [5] }),
+        new Constructor({ x: 250, y: 260, id: 5, connectors: [6, 8] }),
+        //knee-right
+        new Constructor({ x: 280, y: 300, id: 6, connectors: [7]}),
+        //leg-right
+        new Constructor({ x: 300, y: 350, id: 7, connectors: [] }),
+        //knee-left
+        new Constructor({ x: 215, y: 300, id: 8, connectors: [9]}),
+        //leg-left
+        new Constructor({ x: 200, y: 350, id: 9, connectors: [8] }),
     ];
-    
+    stickman = new Stickman();
 }
 
 function draw() {
     background(133);
-    constructors.forEach(function (constructor) {
+    /*constructors.forEach(function (constructor) {
         constructor.draw();
         constructor.drag();
-    });
+    });*/
+    stickman.draw();
+    console.log(constructors[3].x + constructors[3].y);    
 }
 
 function mouseReleased() {
@@ -62,8 +68,6 @@ var dist = (function () {
     }
 })();
 
-//var selectedDot = undefined;
-
 function Constructor(config) {
     this.x = config.x;
     this.y = config.y;
@@ -88,12 +92,12 @@ Constructor.prototype = {
         for (var i = 0; i < constructors.length; i++) {
             var c = constructors[i];
             if (mouse.isPressed && c.over()) {
-                //selectedDot = c;
                 c.isHeld = true;
                 //console.warn('drag ' + c.id);
             }
             
             if (c.isHeld) {
+                console.warn(c.x);
                 c.move();
             }
         }
@@ -121,7 +125,18 @@ var Stickman = function () {
     this.constructors = constructors;
 
     this.draw = function () {
-    
-};
+        for (var i  = 0; i < this.constructors.length; i++) {
+            for (var j = 0; j < this.constructors[i].connectors.length; j++) {
+                // find connector with id === x
+                var conn = this.constructors.filter(function(cn) {
+                    return cn.id === this.constructors[i].connectors[j];
+                })[0];
+               
+                line(this.constructors[i].x, this.constructors[i].y, conn.x, conn.y);
+            }
+            this.constructors[i].draw();
+            this.constructors[i].drag();
+        }
+    };
 };
 
