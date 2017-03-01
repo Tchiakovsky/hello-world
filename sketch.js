@@ -2,52 +2,67 @@
 var stickman;
 var constructors = [];
 var color;
+var frames = [];
+var play = !true;
+var frame_num = 0;
 function setup() {
     createCanvas(710, 400);
-    // color = color(255, 0, 0);
-    
     constructors = [
+        //head
+        new Constructor({ x: 250, y: 130, id: 1, connectors: []}),
+        //elbow-left
+        new Constructor({ x: 200, y: 170, id: 2, connectors: [3]}),
+        //arm-left
+        new Constructor({ x: 150, y: 150, id: 3, connectors: []}),
+        //elbow-right
+        new Constructor({ x: 300, y: 170, id: 4, connectors: [5]}),
+        //arm-right
+        new Constructor({ x: 350, y: 150, id: 5, connectors: []}),
         //body
-        new Constructor({ x: 250, y: 200, id: 4, connectors: [5] }),
+        new Constructor({ x: 250, y: 200, id: 6, connectors: [1, 7, 2, 4] }),
         //torso
-        new Constructor({ x: 250, y: 260, id: 5, connectors: [6, 8] }),
+        new Constructor({ x: 250, y: 260, id: 7, connectors: [8, 10] }),
         //knee-right
-        new Constructor({ x: 280, y: 300, id: 6, connectors: [7]}),
+        new Constructor({ x: 280, y: 300, id: 8, connectors: [9]}),
         //leg-right
-        new Constructor({ x: 300, y: 350, id: 7, connectors: [] }),
+        new Constructor({ x: 300, y: 350, id: 9, connectors: [] }),
         //knee-left
-        new Constructor({ x: 215, y: 300, id: 8, connectors: [9]}),
+        new Constructor({ x: 215, y: 300, id: 10, connectors: [11]}),
         //leg-left
-        new Constructor({ x: 200, y: 350, id: 9, connectors: [8] }),
+        new Constructor({ x: 200, y: 350, id: 11, connectors: [] }),
     ];
     stickman = new Stickman();
 }
 
 function draw() {
     background(133);
-    /*constructors.forEach(function (constructor) {
-        constructor.draw();
-        constructor.drag();
-    });*/
     stickman.draw();
-    console.log(constructors[3].x + constructors[3].y);    
+    if (play) {
+        image(frames[frame_num]);
+        frame_num++;
+    }
 }
 
 function mouseReleased() {
-    //console.log('released ' + constructors.length);
     for (var i = 0; i < constructors.length; i++) {
         constructors[i].release();
     }
 }
 
 function mouseMoved () {
-    //console.log('moved ' + constructors.length);
     for (var i = 0; i < constructors.length; i++) {
         constructors[i].drag();
     }
 }
 
-
+function keyPressed () {
+    if (keyCode === UP_ARROW) {
+        frames.push(get(0, 0, 710, 400));
+    }
+    if (keyCode === 32) {
+        play = true;
+    }
+}
 
 var mouse = {
     get x() { return mouseX; },
@@ -93,11 +108,11 @@ Constructor.prototype = {
             var c = constructors[i];
             if (mouse.isPressed && c.over()) {
                 c.isHeld = true;
-                //console.warn('drag ' + c.id);
+                
             }
             
             if (c.isHeld) {
-                console.warn(c.x);
+                
                 c.move();
             }
         }
