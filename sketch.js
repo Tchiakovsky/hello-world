@@ -150,7 +150,7 @@ var Stickman = function () {
                 line(this.constructors[i].x, this.constructors[i].y, conn.x, conn.y);
             }
             this.constructors[i].draw();
-            this.constructors[i].drag();
+            //this.constructors[i].drag();
         }
     };
 };
